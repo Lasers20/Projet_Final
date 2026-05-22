@@ -1,0 +1,33 @@
+@startuml STRMS_Sequence_CreateTask
+title Sequence Diagram - Task Creation by Admin
+
+actor "Alice (Admin)" as Alice
+participant "MainWindow" as GUI
+participant "TaskManager" as TM
+participant "Task" as Task
+participant "TaskHistoryEntry" as History
+
+Alice -> GUI : click "Create Task"
+activate GUI
+GUI -> GUI : open TaskDialog
+GUI -> Task ** : new Task(id, title, ...)
+GUI -> TM : addTask(task, alice)
+activate TM
+TM -> TM : verify alice.canCreateTask()
+alt user not allowed
+    TM --> GUI : throw InvalidRoleException
+else id already exists
+    TM --> GUI : throw DuplicateTaskException
+else success
+    TM -> TM : tasks.put(id, task)
+    TM -> TM : readyQueue.offer(task) if eligible
+    TM -> History ** : new TaskHistoryEntry("CREATE", "Alice", ...)
+    TM -> Task : addHistoryEntry(entry)
+    TM --> GUI : ok
+end
+deactivate TM
+GUI -> GUI : refresh table & dashboard
+GUI --> Alice : display new task
+deactivate GUI
+
+@enduml

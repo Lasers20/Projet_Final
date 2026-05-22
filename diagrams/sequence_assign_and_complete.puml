@@ -1,0 +1,57 @@
+@startuml STRMS_Sequence_AssignAndComplete
+title Sequence Diagram - Assign, Start and Complete a Task
+
+actor "Bob (Manager)" as Bob
+actor "Charlie (Engineer)" as Charlie
+participant "MainWindow" as GUI
+participant "TaskManager" as TM
+participant "Task A" as TaskA
+participant "Task B" as TaskB
+
+== Assignment ==
+Bob -> GUI : Select Task A, click "Assign"
+GUI -> TM : assignTask("A", Charlie, Bob)
+activate TM
+TM -> TM : verify bob.canAssignTask()
+TM -> TaskA : setEngineer(Charlie)
+TM -> TaskA : addHistoryEntry("ASSIGN", ...)
+TM --> GUI : ok
+deactivate TM
+
+== Start ==
+Charlie -> GUI : Select Task A, click "Start"
+GUI -> TM : startTask("A", Charlie)
+activate TM
+TM -> TM : verify charlie.canExecuteTask()
+TM -> TaskA : allDependenciesDone() ?
+alt dependencies incomplete
+    TM -> TaskA : forceStatus(BLOCKED)
+    TM -> TaskA : addHistoryEntry("BLOCKED", ...)
+    TM --> GUI : throw DependencyNotCompletedException
+else dependencies OK
+    TM -> TaskA : updateStatus(IN_PROGRESS)
+    TM -> TM : inProgress.add(taskA)
+    TM -> TaskA : addHistoryEntry("START", ...)
+end
+deactivate TM
+
+== Completion ==
+Charlie -> GUI : click "Complete"
+GUI -> TM : completeTask("A", Charlie)
+activate TM
+TM -> TaskA : updateStatus(DONE)
+TM -> TM : inProgress.remove(taskA)
+TM -> TaskA : addHistoryEntry("COMPLETE", ...)
+TM -> TM : unblockDependents(taskA)
+loop for each blocked task depending on A
+    TM -> TaskB : allDependenciesDone() ?
+    alt all dependencies DONE
+        TM -> TaskB : forceStatus(TODO)
+        TM -> TaskB : addHistoryEntry("UNBLOCK", ...)
+    end
+end
+TM --> GUI : ok
+deactivate TM
+GUI --> Charlie : refresh UI
+
+@enduml
