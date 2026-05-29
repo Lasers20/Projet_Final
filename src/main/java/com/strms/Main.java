@@ -26,19 +26,23 @@ public class Main {
             User user = login.getSelectedUser();
             if (user == null) { System.exit(0); return; }
 
-            MainWindow window = new MainWindow(manager, user);
-            window.install();
+            new MainWindow(manager, user, () -> startApp(manager)).install();
         });
     }
 
-    private static void seedDemo(TaskManager manager) {
-        Admin alice    = new Admin("U1", "Alice",   "alice@strms.io");
-        Manager bob    = new Manager("U2", "Bob",   "bob@strms.io");
-        Engineer charlie = new Engineer("U3", "Charlie", "charlie@strms.io");
+    private static Object startApp(TaskManager manager) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static void seedDemo(TaskManager manager) {
+        Admin ronald    = new Admin("U1", "Ronald",   "ronald@strms.io");
+        Manager josepha    = new Manager("U2", "Josepha",   "josepha@strms.io");
+        Engineer cesar = new Engineer("U3", "Cesar", "cesar@strms.io");
         Engineer diana   = new Engineer("U4", "Diana",   "diana@strms.io");
-        manager.registerUser(alice);
-        manager.registerUser(bob);
-        manager.registerUser(charlie);
+        manager.registerUser(ronald);
+        manager.registerUser(josepha);
+        manager.registerUser(cesar);
         manager.registerUser(diana);
 
         try {
@@ -54,14 +58,14 @@ public class Main {
                     "End-user documentation",
                     PriorityLevel.LOW, TaskCategory.DOCUMENTATION,
                     LocalDate.now().plusDays(14));
-            manager.addTask(t1, alice);
-            manager.addTask(t2, alice);
-            manager.addTask(t3, alice);
+            manager.addTask(t1, ronald);
+            manager.addTask(t2, ronald);
+            manager.addTask(t3, ronald);
 
-            manager.addDependency("T1", "T2", alice);
-            manager.assignTask("T1", charlie, bob);
-            manager.assignTask("T2", charlie, bob);
-            manager.assignTask("T3", diana,   bob);
+            manager.addDependency("T1", "T2", ronald);
+            manager.assignTask("T1", cesar, josepha);
+            manager.assignTask("T2", cesar, josepha);
+            manager.assignTask("T3", diana, josepha);
         } catch (Exception e) {
             e.printStackTrace();
         }
