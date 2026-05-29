@@ -1,0 +1,29 @@
+==== STRMS Report (2026-05-28 09:27:56) ====
+
+Users:
+  - Admin [id=U1, name=Alice, email=alice@strms.io]
+  - Manager [id=U2, name=Bob, email=bob@strms.io]
+  - Engineer [id=U3, name=Charlie, email=charlie@strms.io]
+  - Engineer [id=U4, name=Diana, email=diana@strms.io]
+
+Tasks (3):
+  * T1 - Implement login page [BLOCKED/HIGH]
+      Deadline: 2026-06-04
+      Engineer: Charlie
+      Dependencies: T2 
+  * T2 - Create database schema [TODO/CRITICAL]
+      Deadline: 2026-06-02
+      Engineer: Charlie
+      Dependencies: none
+  * T3 - Write user manual [TODO/LOW]
+      Deadline: 2026-06-11
+      Engineer: Diana
+      Dependencies: none
+
+Counters:
+  TODO : 2
+  BLOCKED : 1
+  IN_PROGRESS : 0
+  DONE : 0
+
+Overdue tasks:
